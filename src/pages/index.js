@@ -1,27 +1,8 @@
-import { useQuery, gql } from '@apollo/client';
+import { useQuery} from '@apollo/client';
 import Layout from '../components/Layout';
 import RestaurantList from '../components/RestaurantList';
+import { GET_RESTAURANTS } from "../graphql/queries"
 
-const GET_RESTAURANTS = gql`
-  query Restaurant {
-    restaurants {
-      data {
-        id
-        attributes {
-          name
-          description
-          image {
-            data {
-              attributes {
-                url
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`;
 
 export default function Home() {
   const { loading, error, data } = useQuery(GET_RESTAURANTS);
