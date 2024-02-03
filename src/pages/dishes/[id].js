@@ -55,4 +55,4 @@ const DishesPage = () => {
   );
 };
 
-export default DishesPage;
+export default DishesPage

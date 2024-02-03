@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
-import LoginModal from "./LoginModal";
-import SignupModal from "./SignupModal";
+import React, { useState, useEffect, useCallback } from "react";
+import Cart from "./Cart";
+import { useApolloClient } from "@apollo/client";
+import Link from "next/link";
 
 const Header = () => {
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const [showSignupModal, setShowSignupModal] = useState(false);
+  const [showCart, setShowCart] = useState(false);
   const [user, setUser] = useState(null);
+  const apolloClient = useApolloClient();
 
   useEffect(() => {
     const userInfo = localStorage.getItem("user");
@@ -14,21 +15,29 @@ const Header = () => {
     }
   }, []);
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setUser(null);
-  };
+    setShowCart(false);
+    apolloClient.resetStore();
+  }, [apolloClient]);
 
   return (
     <header className="bg-blue-600 text-white p-3 flex justify-between items-center shadow-md w-[80%] mx-auto rounded-full mt-3">
       <h1 className="text-lg font-bold ml-5">Food Ordering App</h1>
-      <div className="flex items-center mr-5 ">
+      <div className="flex items-center mr-5">
         {user ? (
           <>
             <span className="font-medium capitalize bg-white text-blue-600 px-4 py-1 rounded">
               {user.username}
             </span>
+            <button
+              className="bg-orange-500 font-semibold text-white hover:bg-orange-400 px-4 py-1 rounded ml-4 transition duration-300 ease-in-out"
+              onClick={() => setShowCart(true)}
+            >
+              Cart
+            </button>
             <button
               className="bg-white font-semibold text-blue-600 hover:bg-blue-100 px-4 py-1 rounded transition duration-300 ease-in-out ml-4"
               onClick={handleLogout}
@@ -38,39 +47,23 @@ const Header = () => {
           </>
         ) : (
           <>
-            <button
+            <Link
+              href="/login"
               className="bg-white font-semibold text-blue-600 hover:bg-blue-100 px-4 py-1 rounded transition duration-300 ease-in-out"
-              onClick={() => setShowLoginModal(true)}
             >
               Login
-            </button>
-            <button
+            </Link>
+            <Link
+              href="/signup"
               className="bg-white font-semibold text-blue-600 hover:bg-blue-100 px-4 py-1 rounded ml-4 transition duration-300 ease-in-out"
-              onClick={() => setShowSignupModal(true)}
             >
               Sign Up
-            </button>
+            </Link>
           </>
         )}
       </div>
-      {showLoginModal && (
-        <LoginModal
-          onLoginSuccess={(user) => {
-            setUser(user);
-            setShowLoginModal(false);
-          }}
-          onClose={() => setShowLoginModal(false)}
-        />
-      )}
-      {showSignupModal && (
-        <SignupModal
-          onSignupSuccess={(user) => {
-            setUser(user);
-            setShowSignupModal(false);
-          }}
-          onClose={() => setShowSignupModal(false)}
-        />
-      )}
+      
+      {showCart && user && <Cart onClose={() => setShowCart(false)} />}
     </header>
   );
 };
