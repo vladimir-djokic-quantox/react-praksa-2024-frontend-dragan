@@ -1,22 +1,30 @@
 import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import Layout from "../../components/Layout";
-import { GET_DISHES } from '../../graphql/queries'
+import { GET_DISHES_BY_SLUG } from '../../graphql/queries'
+
 
 const DishesPage = () => {
   const router = useRouter();
-  const { id } = router.query;
+  const { slug } = router.query;
 
-  const { loading, error, data } = useQuery(GET_DISHES, {
-    variables: { id },
+  const { loading, error, data } = useQuery(GET_DISHES_BY_SLUG, {
+    variables: { slug },
+    context: {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    },
   });
 
+  console.log(slug);
+
+  
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
-  const restaurantName = data.restaurant.data.attributes.name; 
-  const dishes = data.restaurant.data.attributes.dishes.data;
-
+  const restaurantName = data.restaurantBySlug.data.attributes.name;
+  const dishes = data.restaurantBySlug.data.attributes.dishes.data;
   return (
     <Layout>
       <div className="container mx-auto px-4">

@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
-export const GET_DISHES = gql`
-  query GetDishes($id: ID!) {
-    restaurant(id: $id) {
+export const GET_DISHES_BY_SLUG = gql`
+  query GetDishes($slug: String!) {
+    restaurantBySlug(slug: $slug) {
       data {
         attributes {
           name
@@ -27,6 +27,7 @@ export const GET_DISHES = gql`
     }
   }
 `;
+
 
 export const SIGNUP_MUTATION = gql`
   mutation Signup($username: String!, $email: String!, $password: String!) {
