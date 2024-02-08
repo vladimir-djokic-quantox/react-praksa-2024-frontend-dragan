@@ -10,16 +10,8 @@ const DishesPage = () => {
 
   const { loading, error, data } = useQuery(GET_DISHES_BY_SLUG, {
     variables: { slug },
-    context: {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    },
   });
 
-  console.log(slug);
-
-  
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 

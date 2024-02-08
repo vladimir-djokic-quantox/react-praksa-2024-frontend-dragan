@@ -1,11 +1,13 @@
-import { gql } from '@apollo/client';
+import { gql } from "@apollo/client";
 
 export const GET_DISHES_BY_SLUG = gql`
-  query GetDishes($slug: String!) {
+  query GetDishesBySlug($slug: String!) {
     restaurantBySlug(slug: $slug) {
       data {
         attributes {
+          slug
           name
+          description
           dishes {
             data {
               attributes {
@@ -28,7 +30,6 @@ export const GET_DISHES_BY_SLUG = gql`
   }
 `;
 
-
 export const SIGNUP_MUTATION = gql`
   mutation Signup($username: String!, $email: String!, $password: String!) {
     register(
@@ -50,6 +51,7 @@ export const GET_RESTAURANTS = gql`
         id
         attributes {
           name
+          slug
           description
           image {
             data {
@@ -76,5 +78,3 @@ export const LOGIN_MUTATION = gql`
     }
   }
 `;
-
-

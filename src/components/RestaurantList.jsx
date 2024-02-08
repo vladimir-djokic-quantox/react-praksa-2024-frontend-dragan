@@ -1,13 +1,12 @@
 import Link from "next/link";
-import slugify from "@/utils/slugify";
 
 const RestaurantList = ({ restaurants }) => {
   if (!restaurants) return <p className="text-center text-gray-400 text-lg">No restaurants found.</p>;
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
-      {restaurants.map(({ id, attributes }) => (
-        <Link key={id} href={`/dishes/${slugify(attributes.name)}`} className="block">
+      {restaurants.map(({ attributes }) => (
+        <Link key={attributes.slug} href={`/dishes/${attributes.slug}`} className="block">
           <div className="border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 ease-in-out bg-white">
             {attributes.image.data && (
               <div className="w-full h-56 overflow-hidden rounded-t-lg">
@@ -32,4 +31,3 @@ const RestaurantList = ({ restaurants }) => {
 };
 
 export default RestaurantList;
- 
