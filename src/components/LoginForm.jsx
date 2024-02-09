@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
-import {LOGIN_MUTATION} from "../graphql/queries"
+import { LOGIN_MUTATION } from "../graphql/queries";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
@@ -15,9 +15,7 @@ const LoginForm = () => {
       const response = await login({ variables: { email, password } });
       localStorage.setItem("token", response.data.login.jwt);
       localStorage.setItem("user", JSON.stringify(response.data.login.user));
-
       console.log("Logged in user:", response.data.login.user);
-
       router.push('/');
     } catch (error) {
       console.error("Login error:", error.message);
@@ -25,9 +23,9 @@ const LoginForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    <form onSubmit={handleSubmit} className="mt-6">
       <div className="mb-4">
-        <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">
+        <label htmlFor="email" className="block text-sm font-semibold text-gray-600">
           Email:
         </label>
         <input
@@ -35,12 +33,12 @@ const LoginForm = () => {
           id="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           required
+          className="text-gray-800 w-full px-4 py-2 mt-2 border rounded-lg focus:outline-none focus:ring-1"
         />
       </div>
-      <div className="mb-6">
-        <label htmlFor="password" className="block text-gray-700 text-sm font-bold mb-2">
+      <div className="mb-4">
+        <label htmlFor="password" className="block text-sm font-semibold text-gray-600">
           Password:
         </label>
         <input
@@ -48,20 +46,20 @@ const LoginForm = () => {
           id="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
           required
+          className="text-gray-800 w-full px-4 py-2 mt-2 border rounded-lg focus:outline-none focus:ring-1"
         />
       </div>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mt-6">
         <button
           type="submit"
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           disabled={loading}
+          className="px-4 py-2 leading-6 text-white transition-colors duration-200 transform bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
         >
           Sign In
         </button>
       </div>
-      {error && <p className="text-red-500 text-xs italic">{error.message}</p>}
+      {error && <p className="mt-3 text-xs text-red-500">{error.message}</p>}
     </form>
   );
 };

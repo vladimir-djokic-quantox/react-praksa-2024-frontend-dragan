@@ -1,5 +1,46 @@
 import { gql } from "@apollo/client";
 
+export const GET_USER_CART_QUERY = gql`
+  query GetUserCart {
+    me {
+      username
+      cart {
+        data {
+          attributes {
+            dishes {
+              data {
+                attributes {
+                  name
+                  price
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const CLEAR_CART_MUTATION = gql`
+  mutation ClearCart {
+    clearCart {
+      data {
+        attributes {
+          dishes {
+            data {
+              attributes {
+                name
+                price
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const GET_DISHES_BY_SLUG = gql`
   query GetDishesBySlug($slug: String!) {
     restaurantBySlug(slug: $slug) {

@@ -1,48 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { gql, useQuery, useMutation } from "@apollo/client";
+import { GET_USER_CART_QUERY, CLEAR_CART_MUTATION } from '../graphql/queries'; 
 
-const GET_USER_CART_QUERY = gql`
-  query GetUserCart {
-    me {
-      username
-      cart {
-        data {
-          attributes {
-            dishes {
-              data {
-                attributes {
-                  name
-                  price
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`;
-
-const CLEAR_CART_MUTATION = gql`
-  mutation ClearCart {
-    clearCart {
-      data {
-        attributes {
-          dishes {
-            data {
-              attributes {
-                name
-                price
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`;
-
-const Cart = ({ onClose }) => {
+const Cart = ({ onClose: closeCart }) => {
   const { data } = useQuery(GET_USER_CART_QUERY, {
     context: {
       headers: {
@@ -63,19 +23,34 @@ const Cart = ({ onClose }) => {
   const isEmpty =
     !data || data.me.cart.data.attributes.dishes.data.length === 0;
 
+  const isLoggedIn = !!localStorage.getItem("token");
+
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
+
   const handleClearCart = () => {
     clearCart().catch((error) => console.error("Error clearing cart:", error));
   };
 
-  const isLoggedIn = !!localStorage.getItem("token");
+  const onClose = () => {
+    setIsVisible(false);
+    setTimeout(() => closeCart(), 300);
+  };
 
   return (
     <div className="fixed inset-0 z-40 flex justify-end">
       <div
         className="absolute inset-0 bg-black opacity-50"
-        onClick={onClose}>
-      </div>
-      <div className="w-full md:w-1/3 h-1/2 bg-white shadow-2xl z-50 flex flex-col rounded-l-lg">
+        onClick={onClose}
+      ></div>
+      <div
+        className={`w-full md:w-1/3 h-1/2 bg-white shadow-2xl z-50 flex flex-col rounded-l-lg ${
+          isVisible ? "translate-x-0" : "translate-x-full"
+        } transition-transform duration-300 ease-in-out`}
+      >
         <div className="p-4 border-b flex justify-between items-center bg-gray-100 rounded-tl-lg">
           <button
             onClick={onClose}
