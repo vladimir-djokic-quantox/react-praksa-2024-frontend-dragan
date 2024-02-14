@@ -38,8 +38,6 @@ const Cart = ({ onClose: closeCart }) => {
         },
       },
       onCompleted: () => refetch(),
-      onError: (error) =>
-        console.error("Error removing item from cart:", error),
     }
   );
 
@@ -52,7 +50,6 @@ const Cart = ({ onClose: closeCart }) => {
         },
       },
       onCompleted: () => refetch(),
-      onError: (error) => console.error("Error clearing the cart:", error),
     }
   );
 

@@ -44,9 +44,7 @@ const Header = ({ hideCartButton }) => {
       <div className="flex items-center mr-5">
         {user ? (
           <>
-            <span className="font-medium capitalize bg-white text-blue-600 px-4 py-1 rounded">
-              {user.username}
-            </span>
+            
             {!hideCartButton && (
               <button
                 className="bg-orange-500 font-semibold text-white hover:bg-orange-400 px-4 py-1 rounded ml-4 transition duration-300 ease-in-out"
@@ -55,6 +53,9 @@ const Header = ({ hideCartButton }) => {
                 View order ({totalItems} items - {totalPrice} RSD)
               </button>
             )}
+            <span className="font-medium capitalize bg-white text-blue-600 px-4 py-1 rounded ml-4">
+              {user.username}
+            </span>
             <button
               className="bg-white font-semibold text-blue-600 hover:bg-blue-100 px-4 py-1 rounded transition duration-300 ease-in-out ml-4"
               onClick={handleLogout}

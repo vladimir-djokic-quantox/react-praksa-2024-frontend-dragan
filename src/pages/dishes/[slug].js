@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import Layout from "../../components/Layout";
 import { GET_DISHES_BY_SLUG, GET_USER_CART_QUERY, ADD_TO_CART } from "../../graphql/queries";
 
-
 const DishesPage = () => {
   const router = useRouter();
   const { slug } = router.query;
@@ -21,50 +20,22 @@ const DishesPage = () => {
     variables: { slug },
   });
 
+  const { refetch } = useQuery(GET_USER_CART_QUERY, {
+    context: {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    },
+    skip: !authToken,
+  });
+
   const [addToCart, { loading: addingToCart }] = useMutation(ADD_TO_CART, {
     context: {
       headers: {
         Authorization: `Bearer ${authToken}`,
       },
     },
-    update: (cache, { data: { addToCart } }) => {
-      const newCartItem = addToCart.data.attributes.dishes.data[0];
-
-      const existingCartData = cache.readQuery({
-        query: GET_USER_CART_QUERY,
-      });
-
-      if (!existingCartData || !existingCartData.me || !existingCartData.me.cart) return;
-
-      const updatedCartItems = [
-        ...existingCartData.me.cart.data.attributes.dishes.data,
-        newCartItem,
-      ];
-
-      cache.writeQuery({
-        query: GET_USER_CART_QUERY,
-        data: {
-          me: {
-            ...existingCartData.me,
-            cart: {
-              ...existingCartData.me.cart,
-              data: {
-                ...existingCartData.me.cart.data,
-                attributes: {
-                  ...existingCartData.me.cart.data.attributes,
-                  dishes: {
-                    ...existingCartData.me.cart.data.attributes.dishes,
-                    data: updatedCartItems,
-                  },
-                },
-              },
-            },
-          },
-        },
-      });
-    },
-    onError: (error) => console.error("Add to cart error:", error.message),
-    onCompleted: () => console.log("Item added to cart successfully"),
+    onCompleted: () => refetch(), 
   });
 
   const handleAddToCart = async (dishId) => {
