@@ -1,17 +1,67 @@
 import { gql } from "@apollo/client";
 
+export const ADD_TO_CART = gql`
+mutation AddToCart($dishId: ID!) {
+  addToCart(dish: $dishId) {
+    data {
+      id
+      attributes {
+        dishes {
+          data {
+            id
+            attributes {
+              name
+              price
+            }
+          }
+        }
+      }
+    }
+  }
+}
+`;
+
+export const REMOVE_FROM_CART_MUTATION = gql`
+mutation RemoveFromCart($dishId: ID!) {
+  removeFromCart(dish: $dishId) {
+    data {
+      id
+      attributes {
+        dishes {
+          data {
+            id
+            attributes {
+              name
+              price
+            }
+          }
+        }
+      }
+    }
+  }
+}
+`;
+
 export const GET_USER_CART_QUERY = gql`
-  query GetUserCart {
-    me {
-      username
-      cart {
-        data {
-          attributes {
-            dishes {
-              data {
-                attributes {
-                  name
-                  price
+query GetUserCart {
+  me {
+    username
+    cart {
+      data{
+        attributes{
+          dishes{
+            data {
+              id
+              attributes{
+                name
+                price
+                image {
+                  data{
+                    attributes{
+                      url
+                    }
+                    
+                  }
                 }
               }
             }
@@ -20,6 +70,8 @@ export const GET_USER_CART_QUERY = gql`
       }
     }
   }
+}
+
 `;
 
 export const CLEAR_CART_MUTATION = gql`

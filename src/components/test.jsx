@@ -3,10 +3,13 @@ import { gql, useQuery, useMutation } from "@apollo/client";
 import { GET_USER_CART_QUERY, CLEAR_CART_MUTATION, REMOVE_FROM_CART_MUTATION } from "../graphql/queries";
 import { useRouter } from "next/router";
 
+
+
 const Cart = ({ onClose: closeCart }) => {
   const router = useRouter();
   const {
     data,
+    loading: loadingCart,
     refetch,
   } = useQuery(GET_USER_CART_QUERY, {
     context: {

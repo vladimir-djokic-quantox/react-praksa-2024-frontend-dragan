@@ -2,33 +2,8 @@ import { useQuery, useMutation, gql } from "@apollo/client";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Layout from "../../components/Layout";
-import { GET_DISHES_BY_SLUG, GET_USER_CART_QUERY } from "../../graphql/queries";
+import { GET_DISHES_BY_SLUG, GET_USER_CART_QUERY, ADD_TO_CART } from "../../graphql/queries";
 
-const ADD_TO_CART = gql`
-  mutation AddToCart($dishId: ID!) {
-    addToCart(dish: $dishId) {
-      data {
-        id
-        attributes {
-          user {
-            data {
-              id
-            }
-          }
-          dishes {
-            data {
-              id
-              attributes {
-                name
-                price
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`;
 
 const DishesPage = () => {
   const router = useRouter();
@@ -53,21 +28,22 @@ const DishesPage = () => {
       },
     },
     update: (cache, { data: { addToCart } }) => {
+      const newCartItem = addToCart.data.attributes.dishes.data[0];
+
       const existingCartData = cache.readQuery({
         query: GET_USER_CART_QUERY,
       });
-  
-      const newCartItem = addToCart.data; 
-  
+
+      if (!existingCartData || !existingCartData.me || !existingCartData.me.cart) return;
+
       const updatedCartItems = [
         ...existingCartData.me.cart.data.attributes.dishes.data,
         newCartItem,
       ];
-  
+
       cache.writeQuery({
         query: GET_USER_CART_QUERY,
         data: {
-          ...existingCartData,
           me: {
             ...existingCartData.me,
             cart: {
