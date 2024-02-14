@@ -42,24 +42,22 @@ export const CLEAR_CART_MUTATION = gql`
 `;
 
 export const GET_DISHES_BY_SLUG = gql`
-  query GetDishesBySlug($slug: String!) {
-    restaurantBySlug(slug: $slug) {
-      data {
-        attributes {
-          slug
-          name
-          description
-          dishes {
-            data {
-              attributes {
-                name
-                description
-                price
-                image {
-                  data {
-                    attributes {
-                      url
-                    }
+query GetDishesBySlug($slug: String!) {
+  restaurantBySlug(slug: $slug) {
+    data {
+      attributes {
+        name
+        dishes {
+          data {
+            id
+            attributes {
+              name
+              description
+              price
+              image {
+                data {
+                  attributes {
+                    url
                   }
                 }
               }
@@ -69,6 +67,7 @@ export const GET_DISHES_BY_SLUG = gql`
       }
     }
   }
+}
 `;
 
 export const SIGNUP_MUTATION = gql`
