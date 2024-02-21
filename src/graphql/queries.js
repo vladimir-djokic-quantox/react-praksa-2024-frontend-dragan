@@ -1,5 +1,39 @@
 import { gql } from "@apollo/client";
 
+export const CREATE_ORDER_MUTATION = gql`
+  mutation CreateOrder($address: String!, $amount: Float!, $dishes: JSON!, $user: ID!) {
+    createOrder(data: {address: $address, amount: $amount, dishes: $dishes, user: $user}) {
+      data {
+        id
+        attributes {
+          address
+          amount
+          token
+          dishes
+          user {
+            data {
+              id
+              attributes {
+                username
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const GET_CURRENT_USER_QUERY = gql`
+  query GetCurrentUser {
+    me {
+      id
+      username
+    }
+  }
+`;
+
+
 export const ADD_TO_CART = gql`
 mutation AddToCart($dishId: ID!) {
   addToCart(dish: $dishId) {
