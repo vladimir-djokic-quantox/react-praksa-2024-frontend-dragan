@@ -7,11 +7,10 @@ import { useRouter } from "next/router";
 const Layout = ({ children }) => {
   const router = useRouter();
   const showBackButton = router.pathname !== "/";
-  const isCheckoutPage = router.pathname === "/checkout";
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50 text-gray-800">
-      <Header hideCartButton={isCheckoutPage} />
+      <Header />
       {showBackButton && <BackButton />}
       <main className="flex-grow container mx-auto px-4 py-8">{children}</main>
       <Footer />

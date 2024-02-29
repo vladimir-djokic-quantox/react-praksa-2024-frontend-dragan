@@ -1,5 +1,20 @@
 import { gql } from "@apollo/client";
 
+export const GET_PAYMENT_TOKEN_QUERY = gql`
+query GetPaymentToken {
+  me {
+    orders {
+      data {
+        id
+        attributes {
+          token
+        }
+      }
+    }
+  }
+}
+`;
+
 export const CREATE_ORDER_MUTATION = gql`
   mutation CreateOrder($address: String!, $amount: Float!, $dishes: JSON!, $user: ID!) {
     createOrder(data: {address: $address, amount: $amount, dishes: $dishes, user: $user}) {
