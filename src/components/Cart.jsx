@@ -5,63 +5,26 @@ import { useRouter } from "next/router";
 
 const Cart = ({ onClose: closeCart }) => {
   const router = useRouter();
-  const {
-    data,
-    refetch,
-  } = useQuery(GET_USER_CART_QUERY, {
-    context: {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    },
-  });
-
+  const { data, refetch } = useQuery(GET_USER_CART_QUERY);
   const [dishes, setDishes] = useState([]);
 
   useEffect(() => {
-    if (
-      data &&
-      data.me &&
-      data.me.cart &&
-      data.me.cart.data.attributes.dishes.data
-    ) {
+    if (data && data.me && data.me.cart && data.me.cart.data.attributes.dishes.data) {
       setDishes(data.me.cart.data.attributes.dishes.data);
     }
   }, [data]);
 
-  const [removeFromCart, { loading: loadingRemove }] = useMutation(
-    REMOVE_FROM_CART_MUTATION,
-    {
-      context: {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      },
-      onCompleted: () => refetch(),
-    }
-  );
+  const [removeFromCart, { loading: loadingRemove }] = useMutation(REMOVE_FROM_CART_MUTATION, {
+    onCompleted: () => refetch(),
+  });
 
-  const [clearCart, { loading: loadingClear }] = useMutation(
-    CLEAR_CART_MUTATION,
-    {
-      context: {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      },
-      onCompleted: () => refetch(),
-    }
-  );
+  const [clearCart, { loading: loadingClear }] = useMutation(CLEAR_CART_MUTATION, {
+    onCompleted: () => refetch(),
+  });
 
   const handleRemoveFromCart = async (dishId) => {
-    await removeFromCart({
-      variables: {
-        dishId,
-      },
-    });
-    setDishes((currentDishes) =>
-      currentDishes.filter((dish) => dish.id !== dishId)
-    );
+    await removeFromCart({ variables: { dishId } });
+    setDishes(currentDishes => currentDishes.filter(dish => dish.id !== dishId));
   };
 
   const handleClearCart = async () => {

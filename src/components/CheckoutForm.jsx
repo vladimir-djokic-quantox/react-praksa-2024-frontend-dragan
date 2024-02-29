@@ -8,36 +8,10 @@ import {
 import PaymentModal from "./PaymentModal";
 
 const CheckoutForm = () => {
-  const {
-    data: cartData,
-    loading: cartLoading,
-    error: cartError,
-    refetch: refetchCart,
-  } = useQuery(GET_USER_CART_QUERY, {
-    context: {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    },
-  });
-  const { data: userData, refetch: refetchUser } = useQuery(
-    GET_CURRENT_USER_QUERY,
-    {
-      context: {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      },
-    }
-  );
+  const { data: cartData, loading: cartLoading, error: cartError, refetch: refetchCart } = useQuery(GET_USER_CART_QUERY);
+  const { data: userData, refetch: refetchUser } = useQuery(GET_CURRENT_USER_QUERY);
 
-  const [createOrder] = useMutation(CREATE_ORDER_MUTATION, {
-    context: {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    },
-  });
+  const [createOrder] = useMutation(CREATE_ORDER_MUTATION);
 
   const [streetAddress, setStreetAddress] = useState("");
   const [city, setCity] = useState("");
@@ -55,11 +29,7 @@ const CheckoutForm = () => {
 
   const handleOrderSubmit = async () => {
     const fullAddress = `${streetAddress}, ${city}, ${zipCode}`;
-    const dishesJson = cartData.me.cart.data.attributes.dishes.data.map(
-      (dish) => ({
-        id: dish.id,
-      })
-    );
+    const dishesJson = cartData.me.cart.data.attributes.dishes.data.map(dish => ({ id: dish.id }));
 
     try {
       await createOrder({
@@ -80,8 +50,8 @@ const CheckoutForm = () => {
 
   const onPaymentSuccess = () => {
     setPaymentSuccess(true);
-    refetchCart(); 
-    refetchUser(); 
+    refetchCart();
+    refetchUser();
   };
 
   if (paymentSuccess) {

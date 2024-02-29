@@ -1,40 +1,21 @@
-import { useQuery, useMutation, gql } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
 import Layout from "../../components/Layout";
 import { GET_DISHES_BY_SLUG, GET_USER_CART_QUERY, ADD_TO_CART } from "../../graphql/queries";
 
 const DishesPage = () => {
   const router = useRouter();
   const { slug } = router.query;
-  const [authToken, setAuthToken] = useState("");
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const token = localStorage.getItem("token");
-      setAuthToken(token);
-    }
-  }, []);
 
   const { loading, error, data } = useQuery(GET_DISHES_BY_SLUG, {
     variables: { slug },
   });
 
   const { refetch } = useQuery(GET_USER_CART_QUERY, {
-    context: {
-      headers: {
-        Authorization: `Bearer ${authToken}`,
-      },
-    },
-    skip: !authToken,
+    skip: typeof window === 'undefined' || !localStorage.getItem("token"), 
   });
 
   const [addToCart, { loading: addingToCart }] = useMutation(ADD_TO_CART, {
-    context: {
-      headers: {
-        Authorization: `Bearer ${authToken}`,
-      },
-    },
     onCompleted: () => refetch(), 
   });
 
@@ -60,7 +41,7 @@ const DishesPage = () => {
             >
               {attributes.image && attributes.image.data.length > 0 && (
                 <img
-                  src={`http://localhost:3030${attributes.image.data[0].attributes.url}`}
+                  src={`http://localhost:3030${attributes.image.data[0].attributes.url}`} 
                   alt={attributes.name}
                   className="w-full h-56 object-cover mb-4 rounded"
                 />

@@ -9,13 +9,7 @@ const Header = ({ hideCartButton }) => {
   const [user, setUser] = useState(null);
   const apolloClient = useApolloClient();
 
-  const { data } = useQuery(GET_USER_CART_QUERY, {
-    context: {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    },
-  });
+  const { data } = useQuery(GET_USER_CART_QUERY);
 
   useEffect(() => {
     const userInfo = localStorage.getItem("user");
@@ -33,10 +27,9 @@ const Header = ({ hideCartButton }) => {
   }, [apolloClient]);
 
   const totalItems = data?.me.cart.data.attributes.dishes.data.length || 0;
-  const totalPrice =
-    data?.me.cart.data.attributes.dishes.data
-      .reduce((acc, dish) => acc + dish.attributes.price, 0)
-      .toFixed(2) || "0.00";
+  const totalPrice = data?.me.cart.data.attributes.dishes.data
+    .reduce((acc, dish) => acc + dish.attributes.price, 0)
+    .toFixed(2) || "0.00";
 
   return (
     <header className="bg-blue-600 text-white p-3 flex justify-between items-center shadow-md w-[80%] mx-auto rounded-full mt-3">
@@ -44,7 +37,6 @@ const Header = ({ hideCartButton }) => {
       <div className="flex items-center mr-5">
         {user ? (
           <>
-            
             {!hideCartButton && (
               <button
                 className="bg-orange-500 font-semibold text-white hover:bg-orange-400 px-4 py-1 rounded ml-4 transition duration-300 ease-in-out"
